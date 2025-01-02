@@ -4,7 +4,7 @@ import { HStack } from "@chakra-ui/react"
 const App = () => {
   return (
     <HStack>
-      <Button className="bg-white text-black px-3">Click me</Button>
+      <Button className="bg-white text-black">Click me</Button>
       <Button>Click me</Button>
     </HStack>
   )
