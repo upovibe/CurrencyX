@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { currencyMetadata, defaultCurrencyMeta } from '../utils/currencyMetadata';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -29,7 +30,6 @@ interface ApiResponse {
  * @returns Conversion rate from `fromCurrency` to `toCurrency`.
  * @throws Error if the request fails or the currency is not found.
  */
-
 export const fetchConversionRate = async (
     fromCurrency: string,
     toCurrency: string
@@ -38,17 +38,49 @@ export const fetchConversionRate = async (
         const response = await axios.get<ApiResponse>(`${BASE_URL}/${API_KEY}/latest/${fromCurrency}`);
         
         if (response.status === 200) {
-            const conversionRate = response.data.conversion_rates[toCurrency];
-            if (conversionRate) {
-                return conversionRate;
+            const { conversion_rates } = response.data;
+            if (conversion_rates && conversion_rates[toCurrency] != null) {
+                return conversion_rates[toCurrency];
             } else {
                 throw new Error(`Conversion rate for ${toCurrency} not found.`);
             }
         } else {
-            throw new Error('Failed to fetch data from the API.');
+            throw new Error(`API responded with status ${response.status}: ${response.statusText}`);
         }
     } catch (error) {
         console.error('Error fetching currency conversion rate:', error);
         throw new Error('Failed to fetch conversion rates. Please check the API or your network connection.');
+    }
+};
+
+/**
+ * Fetch the list of supported currencies.
+ * 
+ * @param baseCurrency - The base currency to fetch rates for (default is 'USD').
+ * @returns An object containing all supported currencies and their conversion rates.
+ * @throws Error if the request fails.
+ */
+export const fetchSupportedCurrencies = async (
+    baseCurrency: string = 'USD'
+): Promise<{ [code: string]: { label: string; symbol: string } }> => {
+    try {
+        const response = await axios.get<ApiResponse>(`${BASE_URL}/${API_KEY}/latest/${baseCurrency}`);
+        
+        if (response.status === 200) {
+            const { conversion_rates } = response.data;
+            if (conversion_rates) {
+                return Object.keys(conversion_rates).reduce((acc, code) => {
+                    acc[code] = currencyMetadata[code] || defaultCurrencyMeta;
+                    return acc;
+                }, {} as { [code: string]: { label: string; symbol: string } });
+            } else {
+                throw new Error('No conversion rates found in the API response.');
+            }
+        } else {
+            throw new Error(`API responded with status ${response.status}: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error fetching supported currencies:', error);
+        throw new Error('Failed to fetch supported currencies. Please check the API or your network connection.');
     }
 };
