@@ -82,7 +82,7 @@ const CurrencyForm = () => {
     <form onSubmit={(e) => e.preventDefault()}>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div className="flex flex-col lg:flex-row gap-4 items-center">
-        <div className="shadow-lg rounded-lg">
+        <div className="shadow-lg rounded-lg w-full">
           <AutoSelect
             options={currencies}
             value={fromCurrency}
@@ -110,7 +110,7 @@ const CurrencyForm = () => {
           <ArrowUpDown className="lg:hidden" />
         </Button>
 
-        <div className="shadow-lg rounded-lg">
+        <div className="shadow-lg rounded-lg w-full">
           <AutoSelect
             options={currencies}
             value={toCurrency}
