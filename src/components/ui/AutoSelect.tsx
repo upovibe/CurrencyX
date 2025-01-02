@@ -1,4 +1,3 @@
-// AutoSelect.tsx
 import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -36,7 +35,7 @@ const AutoSelect: React.FC<AutoSelectProps> = ({
       setIsOpen(true);
     }
   };
-  
+
   const handleOptionClick = (option: Option) => {
     onChange?.(option.value);
     setSearchTerm(option.label); // Update the input field with the selected option
@@ -47,8 +46,10 @@ const AutoSelect: React.FC<AutoSelectProps> = ({
     setIsOpen(!isOpen);
   };
 
-  const handleOutsideClick = () => {
-    setIsOpen(false);
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (!(e.target as HTMLElement).closest(".autoselect-wrapper")) {
+      setIsOpen(false);
+    }
   };
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const AutoSelect: React.FC<AutoSelectProps> = ({
   };
 
   return (
-    <div className="relative" onClick={handleInputClick}>
+    <div className="relative autoselect-wrapper" onClick={handleInputClick}>
       <div className="flex items-center bg-[#37373f]">
         <input
           type="text"
@@ -71,13 +72,18 @@ const AutoSelect: React.FC<AutoSelectProps> = ({
           onChange={handleInputChange}
           onClick={handleChevronClick}
           placeholder={placeholder}
-          className="w-full pl-4 py-2 pr-8 text-sm focus:outline-none border-none cursor-pointer text-gray-200 bg-[#37373f] "
+          className="w-full pl-4 py-2 pr-8 text-sm focus:outline-none border-none cursor-pointer text-gray-200 bg-[#37373f]"
         />
-        <ChevronDown onClick={handleChevronClick} className="cursor-pointer h-full text-gray-200 pr-2" />
+        <ChevronDown
+          onClick={handleChevronClick}
+          className="cursor-pointer h-full text-gray-200 pr-2"
+        />
       </div>
-      {(isOpen && filteredOptions.length > 0) && (
-        <ul className="absolute z-10 w-full py-2 px-2 mt-[2px] overflow-y-auto bg-[#37373f] border border-gray-300 rounded shadow-md">
-          {filteredOptions.slice(0, 8).map((option) => (
+      {isOpen && filteredOptions.length > 0 && (
+        <ul
+          className="absolute z-10 w-full py-2 px-2 mt-[2px] max-h-44 overflow-y-auto bg-[#37373f] border border-gray-300 rounded shadow-md"
+        >
+          {filteredOptions.map((option) => (
             <li
               key={option.value}
               onClick={() => handleOptionClick(option)}
@@ -86,13 +92,6 @@ const AutoSelect: React.FC<AutoSelectProps> = ({
               {option.label}
             </li>
           ))}
-          {filteredOptions.length > 8 && (
-            <li className="px-4 py-2 text-sm text-gray-700">
-              <a href="#" className="text-blue-600 hover:text-blue-800">
-                Show more...
-              </a>
-            </li>
-          )}
         </ul>
       )}
     </div>
