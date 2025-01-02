@@ -1,8 +1,12 @@
-import React from 'react'
+import { Button } from "@/components/ui/button"
+import { HStack } from "@chakra-ui/react"
 
 const App = () => {
   return (
-    <div>App</div>
+    <HStack>
+      <Button className="bg-white text-black px-3">Click me</Button>
+      <Button>Click me</Button>
+    </HStack>
   )
 }
 
