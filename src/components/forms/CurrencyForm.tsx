@@ -7,10 +7,9 @@ import {
 const CurrencyForm = () => {
   return (
     <form onSubmit={(e) => e.preventDefault()}>
-      <NativeSelectRoot className="border-gray-800">
-        <NativeSelectField>
+      <NativeSelectRoot size="xs" variant="subtle" className="border-none">
+        <NativeSelectField className="px-3 py-1">
           <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
         </NativeSelectField>
       </NativeSelectRoot>
       <Input
