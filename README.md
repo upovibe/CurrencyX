@@ -34,10 +34,10 @@ This is a simple app for converting currencies. The app is built with React and 
 
 3. Install dependencies and run locally:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
