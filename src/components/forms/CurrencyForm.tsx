@@ -106,7 +106,7 @@ const CurrencyForm = () => {
             <p>Enter an amount to see the conversion.</p>
           )}
           {exchangeRate && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm font-semibold text-gray-200">
               Exchange Rate: 1 {fromCurrency} = {exchangeRate.toFixed(2)}{" "}
               {toCurrency}
               <br />
