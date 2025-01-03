@@ -6,7 +6,7 @@ CurrencyX is a simple and fast currency conversion tool that allows users to con
 
 ## Live Demo
 
-Check out the live demo [here](https://currency-x-beta.vercel.app/).
+Check out the live demo [here](https://currency-x-red.vercel.app/).
 
 ## Overview
 
