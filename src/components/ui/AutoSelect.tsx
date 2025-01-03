@@ -81,7 +81,7 @@ const AutoSelect: React.FC<AutoSelectProps> = ({
       </div>
       {isOpen && filteredOptions.length > 0 && (
         <ul
-          className="absolute z-10 w-full py-2 px-2 mt-[2px] max-h-44 overflow-y-auto bg-[#37373f] border border-gray-300 rounded shadow-md"
+          className="absolute z-10 w-full py-2 px-2 mt-[2px] max-h-44 overflow-y-auto bg-[#37373f] rounded shadow-md"
         >
           {filteredOptions.map((option) => (
             <li

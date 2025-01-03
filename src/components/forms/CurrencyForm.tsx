@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
-import { ArrowRightLeft, ArrowUpDown } from "lucide-react";
+import { ArrowRightLeft, ArrowUpDown, Github, GithubIcon } from "lucide-react";
 import { Input } from "@chakra-ui/react";
 import { Button } from "@/components/ui/button";
 import AutoSelect from "@/components/ui/AutoSelect";
-import { fetchConversionRate, fetchSupportedCurrencies } from "@/services/currencyService";
+import {
+  fetchConversionRate,
+  fetchSupportedCurrencies,
+} from "@/services/currencyService";
+import { ClipboardIconButton, ClipboardRoot } from "@/components/ui/clipboard";
 
 const CurrencyForm = () => {
-  const [currencies, setCurrencies] = useState<{ value: string; label: string; symbol: string }[]>([]);
+  const [currencies, setCurrencies] = useState<
+    { value: string; label: string; symbol: string }[]
+  >([]);
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
   const [amount, setAmount] = useState<number | "">("");
@@ -19,11 +25,13 @@ const CurrencyForm = () => {
       try {
         const supportedCurrencies = await fetchSupportedCurrencies();
         setCurrencies(
-          Object.entries(supportedCurrencies).map(([code, { label, symbol }]) => ({
-            value: code,
-            label: `${label} (${symbol})`,
-            symbol,
-          }))
+          Object.entries(supportedCurrencies).map(
+            ([code, { label, symbol }]) => ({
+              value: code,
+              label: `${label} (${symbol})`,
+              symbol,
+            })
+          )
         );
       } catch (error) {
         console.error("Failed to fetch currencies:", error);
@@ -78,56 +86,95 @@ const CurrencyForm = () => {
     setToCurrency(value);
   };
 
+  const openGithub = () => {
+    window.open("https://github.com/upovibe/CurrencyX.git", "_blank");
+  };
+
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div className="flex flex-col lg:flex-row gap-4 items-center">
-        <div className="shadow-lg rounded-lg w-full">
-          <AutoSelect
-            options={currencies}
-            value={fromCurrency}
-            onChange={handleFromCurrencyChange}
-            placeholder="From Currency"
-          />
-          <Input
-            type="number"
-            value={amount}
-            onChange={handleAmountChange}
-            placeholder="Amount"
-            variant="subtle"
-            className="px-4 rounded-none focus:outline-none"
-          />
+    <div>
+      <div className="flex items-start justify-between mb-4">
+        <div className="mb-4">
+          {exchangeRate !== null && amount ? (
+            <p>
+              <strong>
+                {amount} {fromCurrency} =
+              </strong>{" "}
+              {typeof result === "number" ? result.toFixed(2) : result}{" "}
+              {toCurrency}
+            </p>
+          ) : (
+            <p>Enter an amount to see the conversion.</p>
+          )}
+          {exchangeRate && (
+            <p className="text-sm text-gray-500">
+              Exchange Rate: 1 {fromCurrency} = {exchangeRate.toFixed(2)}{" "}
+              {toCurrency}
+              <br />
+              Last updated: {new Date().toLocaleString()}
+            </p>
+          )}
         </div>
-
-        <Button
-          variant="ghost"
-          onClick={() => {
-            setFromCurrency(toCurrency);
-            setToCurrency(fromCurrency);
-          }}
-        >
-          <ArrowRightLeft className="lg:block hidden" />
-          <ArrowUpDown className="lg:hidden" />
-        </Button>
-
-        <div className="shadow-lg rounded-lg w-full">
-          <AutoSelect
-            options={currencies}
-            value={toCurrency}
-            onChange={handleToCurrencyChange}
-            placeholder="To Currency"
-          />
-          <Input
-            type="number"
-            value={result}
-            onChange={handleResultChange}
-            placeholder="Result"
-            variant="subtle"
-            className="px-4 rounded-none focus:outline-none"
-          />
+        <div className="flex items-center gap-1">
+          <ClipboardRoot value="https://chakra-ui.com">
+            <ClipboardIconButton />
+          </ClipboardRoot>
+          <Button variant="subtle" onClick={openGithub} className="flex items-center gap-2 bg-gray-500 px-2 rouunded">
+            <GithubIcon/>
+           <span className="hidden lg:inline-block">Visit Github</span>
+          </Button>
         </div>
       </div>
-    </form>
+
+      <form onSubmit={(e) => e.preventDefault()}>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="flex flex-col lg:flex-row gap-4 items-center">
+          <div className="shadow-lg rounded-lg w-full">
+            <AutoSelect
+              options={currencies}
+              value={fromCurrency}
+              onChange={handleFromCurrencyChange}
+              placeholder="From Currency"
+            />
+            <Input
+              type="number"
+              value={amount}
+              onChange={handleAmountChange}
+              placeholder="Amount"
+              variant="subtle"
+              className="px-4 rounded-none focus:outline-none"
+            />
+          </div>
+
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setFromCurrency(toCurrency);
+              setToCurrency(fromCurrency);
+            }}
+          >
+            <ArrowRightLeft className="lg:block hidden" />
+            <ArrowUpDown className="lg:hidden" />
+          </Button>
+
+          <div className="shadow-lg rounded-lg w-full">
+            <AutoSelect
+              options={currencies}
+              value={toCurrency}
+              onChange={handleToCurrencyChange}
+              placeholder="To Currency"
+            />
+            <Input
+              type="number"
+              value={result}
+              onChange={handleResultChange}
+              placeholder="Result"
+              variant="subtle"
+              className="px-4 rounded-none focus:outline-none"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 
