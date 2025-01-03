@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowRightLeft, ArrowUpDown, Github, GithubIcon } from "lucide-react";
+import { ArrowRightLeft, ArrowUpDown, GithubIcon } from "lucide-react";
 import { Input } from "@chakra-ui/react";
 import { Button } from "@/components/ui/button";
 import AutoSelect from "@/components/ui/AutoSelect";
